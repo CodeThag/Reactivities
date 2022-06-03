@@ -7,10 +7,11 @@ import React from "react";
 
 interface HeaderProps {
     title: string;
+    openForm : () => void;
 }
 
 export default function Header(props: HeaderProps) {
-    const { title } = props;
+    const { title, openForm } = props;
     return (
         <React.Fragment>
             <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -21,8 +22,8 @@ export default function Header(props: HeaderProps) {
                 <IconButton>
                     <SearchIcon />
                 </IconButton>
-                <Button variant="outlined" size="small">
-                    Sign up
+                <Button onClick={() => openForm()} variant="outlined" size="small">
+                    Create Activity
                 </Button>
             </Toolbar>
         </React.Fragment>

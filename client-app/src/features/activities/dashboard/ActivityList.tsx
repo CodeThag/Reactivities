@@ -1,11 +1,13 @@
-import { Button, Card, CardActions, CardContent, Stack, Typography } from '@mui/material';
+import { Button, ButtonGroup, Card, CardActions, CardContent, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { Activity } from '../../../app/models/activity';
 
 interface Props {
     activities: Activity[];
+    selectActivity: (id: string) => void;
+    deleteActivity: (id: string) => void;
 }
-export default function ActivityList({ activities }: Props) {
+export default function ActivityList({ activities, selectActivity, deleteActivity }: Props) {
     return (
         <Stack spacing={2}>
             {activities.map((activity) => {
@@ -19,7 +21,10 @@ export default function ActivityList({ activities }: Props) {
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <Button size="small">View</Button>
+                            <ButtonGroup>
+                                <Button onClick={() => selectActivity(activity.id)} variant="outlined" color="success" size="small">View</Button>
+                                <Button onClick={() => deleteActivity(activity.id)} variant="outlined" color="error" size="small">Delete</Button>
+                            </ButtonGroup>
                         </CardActions>
                     </Card>
                 );
