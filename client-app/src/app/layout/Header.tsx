@@ -4,14 +4,16 @@ import SearchIcon from '@mui/icons-material/Search';
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import { useStore } from "../stores/store";
 
 interface HeaderProps {
     title: string;
-    openForm : () => void;
 }
 
 export default function Header(props: HeaderProps) {
-    const { title, openForm } = props;
+    const { title } = props;
+    const {activityStore} = useStore();
+
     return (
         <React.Fragment>
             <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -22,7 +24,7 @@ export default function Header(props: HeaderProps) {
                 <IconButton>
                     <SearchIcon />
                 </IconButton>
-                <Button onClick={() => openForm()} variant="outlined" size="small">
+                <Button onClick={() => activityStore.openForm()} variant="outlined" size="small">
                     Create Activity
                 </Button>
             </Toolbar>

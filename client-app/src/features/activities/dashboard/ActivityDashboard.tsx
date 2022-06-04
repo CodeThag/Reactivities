@@ -1,44 +1,35 @@
 import { Grid } from '@mui/material';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { Activity } from '../../../app/models/activity';
+import { useStore } from '../../../app/stores/store';
 import ActivityDetails from '../details/ActivityDetails';
 import ActivityForm from '../form/ActivityForm';
 import ActivityList from './ActivityList';
 
 interface Props {
-    activities: Activity[];
-    selectedActivity: Activity | undefined;
-    selectActivity: (id: string) => void;
-    cancelSelectActivity: () => void;
-    editMode: boolean;
-    openForm: (id: string) => void;
-    closeForm: () => void;
-    createOrEditActivity: (activity:Activity) => void;
-    deleteActivity:(id: string) => void;
-    submitting: boolean;
+    deleteActivity: (id: string) => void;
 }
 
-export default function ActivityDashboard({ activities, selectedActivity, selectActivity, cancelSelectActivity,
-    editMode, openForm, closeForm, createOrEditActivity, deleteActivity, submitting }: Props) {
+function ActivityDashboard({  deleteActivity }: Props) {
+
+    const { activityStore } = useStore();
+    const { selectedActivity, editMode } = activityStore;
 
     // The && denotes that if everything on the left is fine execute right
     return (
         <Grid sx={{ flexGrow: 1 }} container spacing={2}>
             <Grid item md={8}>
-                <ActivityList activities={activities} selectActivity={selectActivity} deleteActivity={deleteActivity} submitting={submitting}  />
+                <ActivityList />
             </Grid>
             <Grid item md={4}>
                 {selectedActivity && !editMode &&
-                    <ActivityDetails
-                        activity={selectedActivity}
-                        cancelSelectActivity={cancelSelectActivity}
-                        openForm={openForm} />}
+                    <ActivityDetails />}
                 {editMode &&
-                    <ActivityForm 
-                        closeForm={closeForm} 
-                        activity={selectedActivity} 
-                        createOrEditActivity={createOrEditActivity} submitting={submitting} />}
+                    <ActivityForm />}
             </Grid>
         </Grid>
     );
 }
+
+export default observer(ActivityDashboard);

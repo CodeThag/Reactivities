@@ -1,6 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import { request } from "http";
-import { resolve } from "path";
 import { Activity } from "../models/activity";
 
 // Use this to cause a delay and show times

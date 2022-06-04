@@ -6,6 +6,7 @@ import './app/layout/styles.css';
 import App from './app/layout/App';
 import reportWebVitals from './reportWebVitals';
 import theme from './theme';
+import { store, StoreContext } from './app/stores/store';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -15,7 +16,9 @@ root.render(
     <ThemeProvider theme={theme}>
       {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
       <CssBaseline />
-      <App />
+      <StoreContext.Provider value={store}>
+        <App />
+      </StoreContext.Provider>
     </ThemeProvider>
   </React.StrictMode>
 );

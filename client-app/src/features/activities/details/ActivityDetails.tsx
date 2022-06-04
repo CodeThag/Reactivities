@@ -1,14 +1,15 @@
 import { Button, ButtonGroup, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
 import React from 'react';
-import { Activity } from '../../../app/models/activity';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
+import { useStore } from '../../../app/stores/store';
 
-interface Props {
-    activity: Activity;
-    cancelSelectActivity: () => void;
-    openForm: (id: string) => void;
-}
 
-const ActivityDetails = ({ activity, cancelSelectActivity, openForm }: Props) => {
+const ActivityDetails = () => {
+
+    const { activityStore } = useStore();
+    const { selectedActivity: activity, openForm, cancelSelectedActivity } = activityStore;
+
+    if(!activity) return <LoadingComponent />;
 
     return (
         <Card>
@@ -28,7 +29,7 @@ const ActivityDetails = ({ activity, cancelSelectActivity, openForm }: Props) =>
             <CardActions>
                 <ButtonGroup>
                     <Button onClick={() => openForm(activity.id)} size="small" variant="outlined" color="warning">Edit</Button>
-                    <Button onClick={() => cancelSelectActivity()} size="small" variant="outlined" color="error">Cancel</Button>
+                    <Button onClick={() => cancelSelectedActivity()} size="small" variant="outlined" color="error">Cancel</Button>
                 </ButtonGroup>
             </CardActions>
         </Card>);

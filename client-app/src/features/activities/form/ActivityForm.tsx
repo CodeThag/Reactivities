@@ -2,17 +2,13 @@ import { LoadingButton } from "@mui/lab";
 import SaveIcon from '@mui/icons-material/Save';
 import { Box, Button, Card, CardContent, TextField } from "@mui/material";
 import { ChangeEvent, FunctionComponent, useState } from "react";
-import { Activity } from "../../../app/models/activity";
+import { useStore } from "../../../app/stores/store";
+import { observer } from "mobx-react-lite";
 
-interface Props {
-    closeForm: () => void;
-    activity: Activity | undefined;
-    createOrEditActivity: (activity: Activity) => void;
-    submitting: boolean;
-}
+const ActivityForm: FunctionComponent = () => {
 
-const ActivityForm: FunctionComponent<Props> = ({ closeForm, activity: selectedActivity,
-    createOrEditActivity, submitting }) => {
+    const { activityStore } = useStore();
+    const { selectedActivity, closeForm, loading, createActivity, updateActivity } = activityStore;
 
     const initialState = selectedActivity ?? {
         id: '',
@@ -26,9 +22,9 @@ const ActivityForm: FunctionComponent<Props> = ({ closeForm, activity: selectedA
 
     const [activity, setActivity] = useState(initialState);
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {        
+    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        createOrEditActivity(activity);
+        activity.id ? updateActivity(activity) : createActivity(activity);
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -59,7 +55,7 @@ const ActivityForm: FunctionComponent<Props> = ({ closeForm, activity: selectedA
                                 size="small"
                                 type="submit"
                                 endIcon={<SaveIcon />}
-                                loading={submitting}
+                                loading={loading}
                                 loadingPosition="end"
                                 variant="contained"
                             >Save</LoadingButton>
@@ -71,4 +67,4 @@ const ActivityForm: FunctionComponent<Props> = ({ closeForm, activity: selectedA
         </Card>);
 }
 
-export default ActivityForm;
+export default observer(ActivityForm);
