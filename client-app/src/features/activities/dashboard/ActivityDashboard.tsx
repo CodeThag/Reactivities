@@ -15,16 +15,17 @@ interface Props {
     closeForm: () => void;
     createOrEditActivity: (activity:Activity) => void;
     deleteActivity:(id: string) => void;
+    submitting: boolean;
 }
 
 export default function ActivityDashboard({ activities, selectedActivity, selectActivity, cancelSelectActivity,
-    editMode, openForm, closeForm, createOrEditActivity, deleteActivity }: Props) {
+    editMode, openForm, closeForm, createOrEditActivity, deleteActivity, submitting }: Props) {
 
     // The && denotes that if everything on the left is fine execute right
     return (
         <Grid sx={{ flexGrow: 1 }} container spacing={2}>
             <Grid item md={8}>
-                <ActivityList activities={activities} selectActivity={selectActivity} deleteActivity={deleteActivity} />
+                <ActivityList activities={activities} selectActivity={selectActivity} deleteActivity={deleteActivity} submitting={submitting}  />
             </Grid>
             <Grid item md={4}>
                 {selectedActivity && !editMode &&
@@ -33,7 +34,10 @@ export default function ActivityDashboard({ activities, selectedActivity, select
                         cancelSelectActivity={cancelSelectActivity}
                         openForm={openForm} />}
                 {editMode &&
-                    <ActivityForm closeForm={closeForm} activity={selectedActivity} createOrEditActivity={createOrEditActivity} />}
+                    <ActivityForm 
+                        closeForm={closeForm} 
+                        activity={selectedActivity} 
+                        createOrEditActivity={createOrEditActivity} submitting={submitting} />}
             </Grid>
         </Grid>
     );

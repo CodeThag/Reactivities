@@ -1,3 +1,5 @@
+import { LoadingButton } from "@mui/lab";
+import SaveIcon from '@mui/icons-material/Save';
 import { Box, Button, Card, CardContent, TextField } from "@mui/material";
 import { ChangeEvent, FunctionComponent, useState } from "react";
 import { Activity } from "../../../app/models/activity";
@@ -6,9 +8,11 @@ interface Props {
     closeForm: () => void;
     activity: Activity | undefined;
     createOrEditActivity: (activity: Activity) => void;
+    submitting: boolean;
 }
 
-const ActivityForm: FunctionComponent<Props> = ({ closeForm, activity: selectedActivity, createOrEditActivity }) => {
+const ActivityForm: FunctionComponent<Props> = ({ closeForm, activity: selectedActivity,
+    createOrEditActivity, submitting }) => {
 
     const initialState = selectedActivity ?? {
         id: '',
@@ -22,8 +26,8 @@ const ActivityForm: FunctionComponent<Props> = ({ closeForm, activity: selectedA
 
     const [activity, setActivity] = useState(initialState);
 
-    function handleSubmit() {
-        console.log(activity);
+    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {        
+        event.preventDefault();
         createOrEditActivity(activity);
     }
 
@@ -43,15 +47,22 @@ const ActivityForm: FunctionComponent<Props> = ({ closeForm, activity: selectedA
                     onSubmit={handleSubmit}
                     autoComplete="off">
                     <div>
-                        <TextField required id="outlined-required" label="Title" fullWidth name="title" value={activity.title} onChange={handleInputChange} />
+                        <TextField required fullWidth id="outlined-required" label="Title" name="title" value={activity.title} onChange={handleInputChange} />
                         <TextField required id="outlined-required" label="Description" multiline minRows={3} name="description" value={activity.description} onChange={handleInputChange} />
                         <TextField required id="outlined-required" label="Category" name="category" value={activity.category} onChange={handleInputChange} />
-                        <TextField required id="outlined-required" label="Date" name="date" value={activity.date} onChange={handleInputChange} />
+                        <TextField required id="outlined-required" label="Date" type="date" name="date" value={activity.date} onChange={handleInputChange} />
                         <TextField required id="outlined-required" label="City" name="city" value={activity.city} onChange={handleInputChange} />
                         <TextField required id="outlined-required" label="Venue" name="venue" value={activity.venue} onChange={handleInputChange} />
 
                         <div>
-                            <Button size="small" variant="outlined" color="warning" type="submit">Save</Button>
+                            <LoadingButton
+                                size="small"
+                                type="submit"
+                                endIcon={<SaveIcon />}
+                                loading={submitting}
+                                loadingPosition="end"
+                                variant="contained"
+                            >Save</LoadingButton>
                             <Button onClick={() => closeForm()} size="small" variant="outlined" color="error">Cancel</Button>
                         </div>
                     </div>
