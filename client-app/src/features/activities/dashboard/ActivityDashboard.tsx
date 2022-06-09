@@ -1,20 +1,20 @@
 import { Grid } from '@mui/material';
 import { observer } from 'mobx-react-lite';
-import React from 'react';
-import { Activity } from '../../../app/models/activity';
+import React, { useEffect } from 'react';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { useStore } from '../../../app/stores/store';
-import ActivityDetails from '../details/ActivityDetails';
-import ActivityForm from '../form/ActivityForm';
 import ActivityList from './ActivityList';
 
-interface Props {
-    deleteActivity: (id: string) => void;
-}
-
-function ActivityDashboard({  deleteActivity }: Props) {
+function ActivityDashboard() {
 
     const { activityStore } = useStore();
-    const { selectedActivity, editMode } = activityStore;
+
+    useEffect(() => {
+        activityStore.loadActivities();
+    }, [activityStore]);
+
+    
+    if (activityStore.loadingInitial) return <LoadingComponent content='Loading App' />
 
     // The && denotes that if everything on the left is fine execute right
     return (
@@ -23,10 +23,7 @@ function ActivityDashboard({  deleteActivity }: Props) {
                 <ActivityList />
             </Grid>
             <Grid item md={4}>
-                {selectedActivity && !editMode &&
-                    <ActivityDetails />}
-                {editMode &&
-                    <ActivityForm />}
+                <h2>Activity Filters</h2>
             </Grid>
         </Grid>
     );

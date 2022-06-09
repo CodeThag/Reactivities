@@ -7,6 +7,7 @@ import App from './app/layout/App';
 import reportWebVitals from './reportWebVitals';
 import theme from './theme';
 import { store, StoreContext } from './app/stores/store';
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -17,7 +18,9 @@ root.render(
       {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
       <CssBaseline />
       <StoreContext.Provider value={store}>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </StoreContext.Provider>
     </ThemeProvider>
   </React.StrictMode>

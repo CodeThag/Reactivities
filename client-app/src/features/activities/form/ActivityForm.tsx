@@ -1,16 +1,21 @@
 import { LoadingButton } from "@mui/lab";
 import SaveIcon from '@mui/icons-material/Save';
 import { Box, Button, Card, CardContent, TextField } from "@mui/material";
-import { ChangeEvent, FunctionComponent, useState } from "react";
+import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
+import { useParams, useNavigate } from "react-router-dom";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
+import { v4 as uuid } from 'uuid';
 
 const ActivityForm: FunctionComponent = () => {
 
     const { activityStore } = useStore();
-    const { selectedActivity, closeForm, loading, createActivity, updateActivity } = activityStore;
+    const { loadingInitial, loading, createActivity, updateActivity, loadActivity } = activityStore;
+    const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
 
-    const initialState = selectedActivity ?? {
+    const [activity, setActivity] = useState({
         id: '',
         title: '',
         date: '',
@@ -18,19 +23,40 @@ const ActivityForm: FunctionComponent = () => {
         category: '',
         city: '',
         venue: ''
-    }
+    });
 
-    const [activity, setActivity] = useState(initialState);
+    useEffect(() => {
+        if (id) loadActivity(id).then(a => setActivity(a!) // Telling typescript that a will not be null
+        );
+    }, [id, loadActivity])
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        activity.id ? updateActivity(activity) : createActivity(activity);
+
+        if (activity.id.length === 0) {
+            let newActivity = {
+                ...activity,
+                id: uuid()
+            }
+
+            createActivity(newActivity).then(() => 
+                navigate(`/activities/${newActivity.id}`, { replace: true })
+            );
+        }else{
+            updateActivity(activity).then(()=> 
+            navigate(`/activities/${activity.id}`, { replace: true }))
+        }
+        
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const { name, value } = event.target;
         setActivity({ ...activity, [name]: value });
     }
+
+
+
+    if (loadingInitial) return <LoadingComponent />;
 
     return (
         <Card sx={{ marginTop: 2 }} variant="outlined">
@@ -59,7 +85,7 @@ const ActivityForm: FunctionComponent = () => {
                                 loadingPosition="end"
                                 variant="contained"
                             >Save</LoadingButton>
-                            <Button onClick={() => closeForm()} size="small" variant="outlined" color="error">Cancel</Button>
+                            <Button size="small" variant="outlined" color="error">Cancel</Button>
                         </div>
                     </div>
                 </Box>

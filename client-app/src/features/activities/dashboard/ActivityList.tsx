@@ -4,9 +4,11 @@ import { Button, ButtonGroup, Card, CardActions, CardContent, Stack, Typography 
 import React, { SyntheticEvent, useState } from 'react';
 import { useStore } from '../../../app/stores/store';
 import { observer } from 'mobx-react-lite';
+import { Link as RouterLink } from "react-router-dom";
 
 
 function ActivityList() {
+
     const [target, setTarget] = useState('');
     const { activityStore } = useStore();
     const { activitiesByDate, deleteActivity, loading } = activityStore;
@@ -30,7 +32,9 @@ function ActivityList() {
                         </CardContent>
                         <CardActions>
                             <ButtonGroup>
-                                <Button onClick={() => activityStore.selectActivity(activity.id)}
+                                {/**Use ths component to pass router link to the button */}
+                                <Button component={RouterLink}
+                                    to={`/activities/${activity.id}`}
                                     variant="outlined"
                                     color="success"
                                     size="small">View</Button>
